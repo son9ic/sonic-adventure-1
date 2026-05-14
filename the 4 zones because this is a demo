@@ -1,0 +1,118 @@
+// emerald coast 
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Emerald Coast Zone (Demo)</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+
+<body>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+<script>
+
+// 🌍 Scene setup
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x66ccff); // sky
+
+// 📷 Camera (static for now)
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+camera.position.set(0, 8, 15);
+camera.lookAt(0, 0, 0);
+
+// 🎮 Renderer
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// 💡 Light
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(10, 20, 10);
+scene.add(light);
+
+// 🌊 Ocean
+const ocean = new THREE.Mesh(
+  new THREE.PlaneGeometry(200, 200),
+  new THREE.MeshStandardMaterial({ color: 0x0077ff })
+);
+ocean.rotation.x = -Math.PI / 2;
+ocean.position.y = -1;
+scene.add(ocean);
+
+// 🏝️ Beach sand (main playable ground)
+const beach = new THREE.Mesh(
+  new THREE.PlaneGeometry(40, 40),
+  new THREE.MeshStandardMaterial({ color: 0xdeb887 })
+);
+beach.rotation.x = -Math.PI / 2;
+scene.add(beach);
+
+// 🪨 Island / cliffs (simple shapes)
+function createRock(x, z, s) {
+  const rock = new THREE.Mesh(
+    new THREE.BoxGeometry(s, s, s),
+    new THREE.MeshStandardMaterial({ color: 0x777777 })
+  );
+  rock.position.set(x, s/2, z);
+  scene.add(rock);
+}
+
+createRock(-8, -5, 2);
+createRock(6, -7, 3);
+createRock(10, 5, 2);
+createRock(-6, 8, 2);
+
+// 🌴 Simple palm-like shapes (placeholder)
+function createPalm(x, z) {
+  const trunk = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.2, 0.3, 3),
+    new THREE.MeshStandardMaterial({ color: 0x8b5a2b })
+  );
+  trunk.position.set(x, 1.5, z);
+
+  const top = new THREE.Mesh(
+    new THREE.SphereGeometry(0.8),
+    new THREE.MeshStandardMaterial({ color: 0x00aa00 })
+  );
+  top.position.set(x, 3, z);
+
+  scene.add(trunk);
+  scene.add(top);
+}
+
+createPalm(5, 5);
+createPalm(-5, 6);
+
+// 🎬 Render loop (static scene)
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
+
+animate();
+
+// 📱 Resize fix
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+</script>
+
+</body>
+
+
+
+
+</html>
